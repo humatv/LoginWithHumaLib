@@ -1,21 +1,14 @@
 package ir.huma.loginwithhuma;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.annotation.Nullable;
-import android.support.v7.view.ContextThemeWrapper;
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
-public class LoginWithHumaButton extends android.support.v7.widget.AppCompatButton implements View.OnClickListener {
+public class LoginWithHumaButton extends androidx.appcompat.widget.AppCompatButton implements View.OnClickListener {
     LoginWithHuma loginWithHuma;
 
     public LoginWithHumaButton(Context context) {
