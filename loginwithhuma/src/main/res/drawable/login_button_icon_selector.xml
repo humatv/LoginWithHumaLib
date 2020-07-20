@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <layer-list>
+            <item android:width="@dimen/icon_size" android:height="@dimen/icon_size">
+                <bitmap android:src="@drawable/selected_icon"/>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_focused="true" >
+        <layer-list>
+            <item android:width="@dimen/icon_size" android:height="@dimen/icon_size">
+                <bitmap android:src="@drawable/selected_icon"/>
+            </item>
+        </layer-list>
+    </item>
+    <item>
+        <layer-list>
+            <item android:width="@dimen/icon_size" android:height="@dimen/icon_size">
+                <bitmap android:src="@drawable/unselected_icon"/>
+            </item>
+        </layer-list>
+    </item>
+</selector>

@@ -55,7 +55,7 @@ public class LoginWithHuma {
 
     public void send() {
         if (clientKey == null || clientKey.equals("")) {
-            throw new RuntimeException("please set Public Key in java code!!!");
+            throw new RuntimeException("please set Client Key in java code!!!");
         }
         if (onLoginListener == null) {
             throw new RuntimeException("please setOnLoginListener in java code!!!");
@@ -71,22 +71,19 @@ public class LoginWithHuma {
         Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://wizard.huma.ir"));
         in.setPackage("ir.huma.humawizard");
 
-
-        //Intent in = new Intent(send);
         in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         in.putExtra("key", clientKey);
         in.putExtra("package", getContext().getPackageName());
         in.putExtra("scope", scope);
         getContext().startActivity(in);
-        //getContext().sendBroadcast(in);
         getContext().registerReceiver(receiver, new IntentFilter(receive));
 
     }
 
-    public  void unregiter(){
+    public void unregiter() {
         try {
             getContext().unregisterReceiver(receiver);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -108,20 +105,23 @@ public class LoginWithHuma {
         public void onReceive(Context context, Intent intent) {
             try {
                 if (onLoginListener != null) {
-                    if (intent.getBooleanExtra("success", false)) {
-                        onLoginListener.onLogin(intent.getStringExtra("message"));
-                    } else {
-                        onLoginListener.onFail(intent.getStringExtra("message"));
+                    if (intent.hasExtra("packageName") && intent.getStringExtra("packageName").equals(getContext().getPackageName())) {
+                        if (intent.getBooleanExtra("success", false)) {
+                            onLoginListener.onLogin(intent.getStringExtra("message"));
+                        } else {
+                            onLoginListener.onFail(intent.getStringExtra("message"));
+                        }
+                        try {
+                            getContext().unregisterReceiver(receiver);
+                        } catch (Exception e) {
+
+                        }
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            try {
-                getContext().unregisterReceiver(receiver);
-            } catch (Exception e) {
 
-            }
         }
     };
 

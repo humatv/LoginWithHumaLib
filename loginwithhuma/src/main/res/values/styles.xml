@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <style name="HumaButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/login_button_back_selector</item>
+        <item name="android:drawableRight">@drawable/login_button_icon_selector</item>
+        <item name="android:text">ورود با هوما</item>
+        <item name="android:textColor">@color/login_button_text_color</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:maxHeight">60dp</item>
+        <item name="android:minHeight">46dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    
+</resources>
