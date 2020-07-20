@@ -10,7 +10,7 @@ import android.view.View;
 
 public class LoginWithHumaButton extends androidx.appcompat.widget.AppCompatButton implements View.OnClickListener {
     LoginWithHuma loginWithHuma;
-
+    OnClickListener onClickListener;
     public LoginWithHumaButton(Context context) {
         super(new ContextThemeWrapper(context, R.style.HumaButton), null, R.style.HumaButton);
         init(null);
@@ -47,7 +47,7 @@ public class LoginWithHumaButton extends androidx.appcompat.widget.AppCompatButt
 
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
-        throw new RuntimeException("You can't set onClickListener! please call setOnLoginListener!");
+        this.onClickListener = l;
     }
 
     public LoginWithHumaButton setOnLoginListener(LoginWithHuma.OnLoginListener onLoginListener) {
@@ -59,15 +59,16 @@ public class LoginWithHumaButton extends androidx.appcompat.widget.AppCompatButt
     @Override
     public void onClick(View view) {
         loginWithHuma.send();
+        onClickListener.onClick(view);
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         try {
             loginWithHuma.unregiter();
         } catch (Exception e) {
 
         }
+        super.onDetachedFromWindow();
     }
 }
