@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="login_button_text_color">#1A313B</color>
+    <color name="login_button_back_selected_color">#E0E2E2</color>
+    <color name="login_button_back_unselected_color">#ffffff</color>
+</resources>
