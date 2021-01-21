@@ -3,14 +3,17 @@ package ir.huma.loginwithhuma;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.ContextThemeWrapper;
+
 import android.util.AttributeSet;
 import android.view.View;
 
 public class LoginWithHumaButton extends androidx.appcompat.widget.AppCompatButton implements View.OnClickListener {
     LoginWithHuma loginWithHuma;
     OnClickListener onClickListener;
+
     public LoginWithHumaButton(Context context) {
         super(new ContextThemeWrapper(context, R.style.HumaButton), null, R.style.HumaButton);
         init(null);
@@ -59,7 +62,8 @@ public class LoginWithHumaButton extends androidx.appcompat.widget.AppCompatButt
     @Override
     public void onClick(View view) {
         loginWithHuma.send();
-        onClickListener.onClick(view);
+        if (onClickListener != null)
+            onClickListener.onClick(view);
     }
 
     @Override
