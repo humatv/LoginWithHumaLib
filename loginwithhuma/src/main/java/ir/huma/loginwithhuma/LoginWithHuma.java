@@ -68,15 +68,28 @@ public class LoginWithHuma {
             throw new RuntimeException("Scope is not be Null!!!");
         }
 
-        Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://wizard.huma.ir"));
-        in.setPackage("ir.huma.humawizard");
+        try {
+            Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://login.huma.ir"));
+            in.setPackage("ir.huma.humastore");
 
-        in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        in.putExtra("key", clientKey);
-        in.putExtra("package", getContext().getPackageName());
-        in.putExtra("scope", scope);
-        getContext().startActivity(in);
-        getContext().registerReceiver(receiver, new IntentFilter(receive));
+            in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            in.putExtra("key", clientKey);
+            in.putExtra("package", getContext().getPackageName());
+            in.putExtra("scope", scope);
+            getContext().startActivity(in);
+            getContext().registerReceiver(receiver, new IntentFilter(receive));
+        }catch (Exception e){
+            Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://wizard.huma.ir"));
+            in.setPackage("ir.huma.humawizard");
+
+            in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            in.putExtra("key", clientKey);
+            in.putExtra("package", getContext().getPackageName());
+            in.putExtra("scope", scope);
+            getContext().startActivity(in);
+            getContext().registerReceiver(receiver, new IntentFilter(receive));
+        }
+
 
     }
 
