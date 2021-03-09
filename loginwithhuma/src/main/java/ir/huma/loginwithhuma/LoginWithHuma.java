@@ -61,7 +61,7 @@ public class LoginWithHuma {
             throw new RuntimeException("please setOnLoginListener in java code!!!");
         }
         if (!checkHumaInstalled()) {
-            Toast.makeText(context, "نرم افزار ویزارد نصب نشده است!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "لطفا ابتدا برنامه هوما استور را نصب کنید.", Toast.LENGTH_SHORT).show();
             return;
         }
         if (scope == null || scope.equals("")) {
@@ -104,7 +104,7 @@ public class LoginWithHuma {
 
     private boolean checkHumaInstalled() {
         try {
-            getContext().getPackageManager().getPackageInfo("ir.huma.humawizard", 0);
+            getContext().getPackageManager().getPackageInfo("ir.huma.humastore", 0);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             //e.printStackTrace();
