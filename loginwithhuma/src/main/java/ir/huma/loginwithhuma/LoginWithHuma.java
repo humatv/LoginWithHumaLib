@@ -69,29 +69,40 @@ public class LoginWithHuma {
         }
 
         try {
-            Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://login.huma.ir"));
-            in.setPackage("ir.huma.humastore");
+            sendLoginToStore();
+        } catch (Exception e) {
+            try {
 
-            in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            in.putExtra("key", clientKey);
-            in.putExtra("package", getContext().getPackageName());
-            in.putExtra("scope", scope);
-            getContext().startActivity(in);
-            getContext().registerReceiver(receiver, new IntentFilter(receive));
-        }catch (Exception e){
-            Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://wizard.huma.ir"));
-            in.setPackage("ir.huma.humawizard");
-
-            in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            in.putExtra("key", clientKey);
-            in.putExtra("package", getContext().getPackageName());
-            in.putExtra("scope", scope);
-            getContext().startActivity(in);
-            getContext().registerReceiver(receiver, new IntentFilter(receive));
+            } catch (Exception e2) {
+                sendLoginToProfile();
+            }
         }
-
-
     }
+
+    private void sendLoginToStore() {
+        Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://login.huma.ir"));
+        in.setPackage("ir.huma.humastore");
+
+        in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        in.putExtra("key", clientKey);
+        in.putExtra("package", getContext().getPackageName());
+        in.putExtra("scope", scope);
+        getContext().startActivity(in);
+        getContext().registerReceiver(receiver, new IntentFilter(receive));
+    }
+
+    private void sendLoginToProfile() {
+        Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://wizard.huma.ir"));
+        in.setPackage("ir.huma.humawizard");
+
+        in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        in.putExtra("key", clientKey);
+        in.putExtra("package", getContext().getPackageName());
+        in.putExtra("scope", scope);
+        getContext().startActivity(in);
+        getContext().registerReceiver(receiver, new IntentFilter(receive));
+    }
+
 
     public void unregiter() {
         try {

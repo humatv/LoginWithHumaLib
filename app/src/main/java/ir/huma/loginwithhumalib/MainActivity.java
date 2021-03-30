@@ -1,6 +1,8 @@
 package ir.huma.loginwithhumalib;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -8,7 +10,7 @@ import android.widget.Toast;
 import ir.huma.loginwithhuma.LoginWithHuma;
 import ir.huma.loginwithhuma.LoginWithHumaButton;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
