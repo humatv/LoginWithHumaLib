@@ -72,9 +72,9 @@ public class LoginWithHuma {
             sendLoginToStore();
         } catch (Exception e) {
             try {
-
-            } catch (Exception e2) {
                 sendLoginToProfile();
+            } catch (Exception e2) {
+
             }
         }
     }
