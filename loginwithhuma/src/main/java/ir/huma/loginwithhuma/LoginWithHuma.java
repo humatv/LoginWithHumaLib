@@ -71,10 +71,11 @@ public class LoginWithHuma {
         try {
             sendLoginToStore();
         } catch (Exception e) {
+            e.printStackTrace();
             try {
                 sendLoginToProfile();
             } catch (Exception e2) {
-
+                e2.printStackTrace();
             }
         }
     }
@@ -82,7 +83,7 @@ public class LoginWithHuma {
     private void sendLoginToStore() {
         Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://login.huma.ir"));
         in.setPackage("ir.huma.humastore");
-
+        in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         in.putExtra("key", clientKey);
         in.putExtra("package", getContext().getPackageName());
@@ -94,7 +95,7 @@ public class LoginWithHuma {
     private void sendLoginToProfile() {
         Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse("app://wizard.huma.ir"));
         in.setPackage("ir.huma.humawizard");
-
+        in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         in.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         in.putExtra("key", clientKey);
         in.putExtra("package", getContext().getPackageName());
