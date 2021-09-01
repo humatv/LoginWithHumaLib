@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.widget.Toast;
@@ -60,7 +61,7 @@ public class LoginWithHuma {
         if (onLoginListener == null) {
             throw new RuntimeException("please setOnLoginListener in java code!!!");
         }
-        if (!checkHumaInstalled()) {
+        if (!isHumaPlatform()) {
             Toast.makeText(context, "لطفا ابتدا برنامه هوما استور را نصب کنید.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -114,14 +115,25 @@ public class LoginWithHuma {
     }
 
 
-    private boolean checkHumaInstalled() {
+    public boolean isHumaPlatform() {
         try {
-            getContext().getPackageManager().getPackageInfo("ir.huma.humastore", 0);
+            PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo("ir.huma.humastore", 0);
+            if(packageInfo.versionCode > 44){
+                return true;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            //e.printStackTrace();
+            return false;
+        }
+
+        try {
+            getContext().getPackageManager().getPackageInfo("ir.huma.humawizard", 0);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             //e.printStackTrace();
             return false;
         }
+
     }
 
 
@@ -149,6 +161,7 @@ public class LoginWithHuma {
 
         }
     };
+
 
 
     public interface OnLoginListener {
