@@ -42,6 +42,7 @@ public class LoginWithHuma {
 
     public LoginWithHuma setOnLoginListener(OnLoginListener onLoginListener) {
         this.onLoginListener = onLoginListener;
+        registerListeners();
         return this;
     }
 
@@ -90,7 +91,6 @@ public class LoginWithHuma {
         in.putExtra("package", getContext().getPackageName());
         in.putExtra("scope", scope);
         getContext().startActivity(in);
-        getContext().registerReceiver(receiver, new IntentFilter(receive));
     }
 
     private void sendLoginToProfile() {
@@ -102,6 +102,10 @@ public class LoginWithHuma {
         in.putExtra("package", getContext().getPackageName());
         in.putExtra("scope", scope);
         getContext().startActivity(in);
+    }
+
+
+    private void registerListeners(){
         getContext().registerReceiver(receiver, new IntentFilter(receive));
     }
 
@@ -118,19 +122,16 @@ public class LoginWithHuma {
     public boolean isHumaPlatform() {
         try {
             PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo("ir.huma.humastore", 0);
-            if(packageInfo.versionCode > 44){
+            if (packageInfo.versionCode > 44) {
                 return true;
             }
         } catch (PackageManager.NameNotFoundException e) {
-            //e.printStackTrace();
-            return false;
-        }
 
+        }
         try {
             getContext().getPackageManager().getPackageInfo("ir.huma.humawizard", 0);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
-            //e.printStackTrace();
             return false;
         }
 
@@ -161,7 +162,6 @@ public class LoginWithHuma {
 
         }
     };
-
 
 
     public interface OnLoginListener {
