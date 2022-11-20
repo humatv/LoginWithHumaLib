@@ -69,7 +69,7 @@ public class LoginWithHuma {
         if (scope == null || scope.equals("")) {
             throw new RuntimeException("Scope is not be Null!!!");
         }
-
+        registerListeners();
         try {
             sendLoginToStore();
         } catch (Exception e) {
@@ -105,7 +105,7 @@ public class LoginWithHuma {
     }
 
 
-    private void registerListeners(){
+    private void registerListeners() {
         getContext().registerReceiver(receiver, new IntentFilter(receive));
     }
 
