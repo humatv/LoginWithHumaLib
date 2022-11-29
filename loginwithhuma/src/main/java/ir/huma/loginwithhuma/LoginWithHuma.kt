@@ -92,24 +92,25 @@ class LoginWithHuma(private val context: Context) {
     }
 
     private fun sendLoginToService() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val result = loginWithHumaService!!.startLogin(clientKey)
-            Log.d(TAG, "onServiceConnected: ${result}")
-            val response = convertJsonToObject(result)
-            Log.d(TAG, "onServiceConnected: ${response}")
-            Handler(Looper.getMainLooper()).post {
-                Log.d(TAG, "onServiceConnected: mainThread!!!")
+        runBlocking {
+            launch {
+                val result = loginWithHumaService!!.startLogin(clientKey)
+                Log.d(TAG, "onServiceConnected: ${result}")
+                val response = convertJsonToObject(result)
+                Log.d(TAG, "onServiceConnected: ${response}")
+                Handler(Looper.getMainLooper()).post {
+                    Log.d(TAG, "onServiceConnected: mainThread!!!")
 
-                if (response.isSuccess) {
-                    onLoginListener?.onLogin(response.temporaryCode)
-                } else {
-                    onLoginListener?.onFail(response.errorMessage)
+                    if (response.isSuccess) {
+                        onLoginListener?.onLogin(response.temporaryCode)
+                    } else {
+                        onLoginListener?.onFail(response.errorMessage)
+                    }
                 }
+
+                context.unbindService(serviceConnection)
+                Log.d(TAG, "onServiceConnected: unbind")
             }
-
-            context.unbindService(serviceConnection)
-            Log.d(TAG, "onServiceConnected: unbind")
-
         }
     }
 
