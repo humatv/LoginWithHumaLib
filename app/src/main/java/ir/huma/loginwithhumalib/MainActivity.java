@@ -31,36 +31,36 @@ public class MainActivity extends Activity {
     }
 
     public void onLoginClick(View view) {
-        new LoginWithHuma(this)
-                .setClientKey("46d133bc2abeea10afa8dfcd887e74d4")
-                .setOnLoginListener(new LoginWithHuma.OnLoginListener() {
-                    @Override
-                    public void onLogin(String code) {
-                        Toast.makeText(MainActivity.this, "login!!!222", Toast.LENGTH_SHORT).show();
-
-                        // send code to your server here!
-                    }
-
-                    @Override
-                    public void onFail(String message) {
-                        Toast.makeText(MainActivity.this, "cancel or failed!!!", Toast.LENGTH_SHORT).show();
-                    }
-                }).send();
-        findViewById(R.id.loginWithButton).callOnClick();
-        new LoginWithHuma(this)
-                .setClientKey("46d133bc2abeea10afa8dfcd887e74d4")
-                .setOnLoginListener(new LoginWithHuma.OnLoginListener() {
-                    @Override
-                    public void onLogin(String code) {
-                        Toast.makeText(MainActivity.this, "login!!!222", Toast.LENGTH_SHORT).show();
-
-                        // send code to your server here!
-                    }
-
-                    @Override
-                    public void onFail(String message) {
-                        Toast.makeText(MainActivity.this, "cancel or failed!!!", Toast.LENGTH_SHORT).show();
-                    }
-                }).send();
+//        new LoginWithHuma(this)
+//                .setClientKey("46d133bc2abeea10afa8dfcd887e74d4")
+//                .setOnLoginListener(new LoginWithHuma.OnLoginListener() {
+//                    @Override
+//                    public void onLogin(String code) {
+//                        Toast.makeText(MainActivity.this, "login!!!222", Toast.LENGTH_SHORT).show();
+//
+//                        // send code to your server here!
+//                    }
+//
+//                    @Override
+//                    public void onFail(String message) {
+//                        Toast.makeText(MainActivity.this, "cancel or failed!!!", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).send();
+//        findViewById(R.id.loginWithButton).callOnClick();
+//        new LoginWithHuma(this)
+//                .setClientKey("46d133bc2abeea10afa8dfcd887e74d4")
+//                .setOnLoginListener(new LoginWithHuma.OnLoginListener() {
+//                    @Override
+//                    public void onLogin(String code) {
+//                        Toast.makeText(MainActivity.this, "login!!!222", Toast.LENGTH_SHORT).show();
+//
+//                        // send code to your server here!
+//                    }
+//
+//                    @Override
+//                    public void onFail(String message) {
+//                        Toast.makeText(MainActivity.this, "cancel or failed!!!", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).send();
     }
 }

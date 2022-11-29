@@ -57,8 +57,8 @@ class LoginWithHuma(private val context: Context) {
         if (scope == null || scope == "") {
             throw RuntimeException("Scope is not be Null!!!")
         }
-        registerListeners()
         if (!isLoginV2Supported) {
+            registerListeners()
             try {
                 sendLoginToStore()
             } catch (e: Exception) {
@@ -92,7 +92,7 @@ class LoginWithHuma(private val context: Context) {
     }
 
     private fun sendLoginToService() {
-        runBlocking(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.Main) {
             val result = loginWithHumaService!!.startLogin(clientKey)
             Log.d(TAG, "onServiceConnected: ${result}")
             val response = convertJsonToObject(result)
