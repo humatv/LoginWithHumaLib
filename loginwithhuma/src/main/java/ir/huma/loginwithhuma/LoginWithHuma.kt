@@ -84,32 +84,40 @@ class LoginWithHuma(private val context: Context) {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-
             loginWithHumaService = null
             Log.d(TAG, "service disconnected!!")
-
         }
     }
 
     private fun sendLoginToService() {
         runBlocking {
             launch {
-                val result = loginWithHumaService!!.startLogin(clientKey)
-                Log.d(TAG, "onServiceConnected: ${result}")
-                val response = convertJsonToObject(result)
-                Log.d(TAG, "onServiceConnected: ${response}")
-                Handler(Looper.getMainLooper()).post {
-                    Log.d(TAG, "onServiceConnected: mainThread!!!")
+                try {
+                    val result = loginWithHumaService!!.startLogin(clientKey)
+                    val response = convertJsonToObject(result)
+                    Log.d(TAG, "sendLoginToService: $response")
+                    Handler(Looper.getMainLooper()).post {
+                        Log.d(TAG, "onServiceConnected: mainThread!!!")
 
-                    if (response.isSuccess) {
-                        onLoginListener?.onLogin(response.temporaryCode)
-                    } else {
-                        onLoginListener?.onFail(response.errorMessage)
+                        if (response.isSuccess) {
+                            onLoginListener?.onLogin(response.temporaryCode)
+                        } else {
+                            onLoginListener?.onFail(response.errorMessage, response.status)
+                        }
                     }
+                } catch (e: Exception) {
+                    onLoginListener?.onFail(
+                        e.message,
+                        TemporaryCodeResponse.ResponseStatus.UnknownError
+                    )
+                }
+                try {
+                    context.unbindService(serviceConnection)
+                    Log.d(TAG, "onServiceConnected: unbind")
+                } catch (e: Exception) {
+
                 }
 
-                context.unbindService(serviceConnection)
-                Log.d(TAG, "onServiceConnected: unbind")
             }
         }
     }
@@ -157,12 +165,9 @@ class LoginWithHuma(private val context: Context) {
         get() {
             try {
                 val packageInfo = context.packageManager.getPackageInfo("ir.huma.humastore", 0)
-                if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        packageInfo.longVersionCode > 44
-                    } else {
-                        packageInfo.versionCode > 44
-                    }
-                ) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && packageInfo.longVersionCode > 44) {
+                    return true
+                } else if (packageInfo.versionCode > 44) {
                     return true
                 }
             } catch (e: PackageManager.NameNotFoundException) {
@@ -178,7 +183,9 @@ class LoginWithHuma(private val context: Context) {
         get() {
             try {
                 val packageInfo = context.packageManager.getPackageInfo("ir.huma.humastore", 0)
-                if (packageInfo.versionCode >= 110) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && packageInfo.longVersionCode > 110) {
+                    return true
+                } else if (packageInfo.versionCode > 110) {
                     return true
                 }
             } catch (e: PackageManager.NameNotFoundException) {
@@ -186,7 +193,7 @@ class LoginWithHuma(private val context: Context) {
             }
             return false
         }
-    var receiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 if (onLoginListener != null) {
@@ -194,7 +201,10 @@ class LoginWithHuma(private val context: Context) {
                         if (intent.getBooleanExtra("success", false)) {
                             onLoginListener!!.onLogin(intent.getStringExtra("message"))
                         } else {
-                            onLoginListener!!.onFail(intent.getStringExtra("message"))
+                            onLoginListener!!.onFail(
+                                intent.getStringExtra("message"),
+                                TemporaryCodeResponse.ResponseStatus.UnknownError
+                            )
                         }
                         try {
                             context.unregisterReceiver(this)
@@ -208,7 +218,7 @@ class LoginWithHuma(private val context: Context) {
         }
     }
 
-    fun convertJsonToObject(str: String): TemporaryCodeResponse {
+    private fun convertJsonToObject(str: String): TemporaryCodeResponse {
         val mapper = ObjectMapper()
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
         mapper.configure(DeserializationFeature.ACCEPT_FLOAT_AS_INT, true)
@@ -227,7 +237,7 @@ class LoginWithHuma(private val context: Context) {
 
     interface OnLoginListener {
         fun onLogin(code: String?)
-        fun onFail(message: String?)
+        fun onFail(message: String?, status: TemporaryCodeResponse.ResponseStatus?)
     }
 
     companion object {
