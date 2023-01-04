@@ -42,6 +42,3 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.12.4'
 }
-repositories {
-    mavenCentral()
-}
