@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <style name="HumaButton" parent="Widget.AppCompat.Button">
+    <style name="HumaButton" >
         <item name="android:background">@drawable/login_button_back_selector</item>
         <item name="android:drawableRight">@drawable/login_button_icon_selector</item>
         <item name="android:text">ورود با هوما</item>

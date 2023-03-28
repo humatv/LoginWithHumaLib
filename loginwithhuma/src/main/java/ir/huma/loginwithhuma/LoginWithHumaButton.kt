@@ -1,5 +1,6 @@
-package ir.huma.loginwithhuma
 
+package ir.huma.loginwithhuma
+/*
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
@@ -8,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.lifecycleScope
-import ir.huma.loginwithhuma.LoginWithHuma.OnLoginListener
+
 
 class LoginWithHumaButton : AppCompatButton,View.OnClickListener {
     var loginWithHuma: LoginWithHuma? = null
@@ -82,4 +83,4 @@ class LoginWithHumaButton : AppCompatButton,View.OnClickListener {
         }
         super.onDetachedFromWindow()
     }
-}
+}*/

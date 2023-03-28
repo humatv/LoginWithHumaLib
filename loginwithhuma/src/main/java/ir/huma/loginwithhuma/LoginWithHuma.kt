@@ -31,9 +31,13 @@ class LoginWithHuma(private val context: Context) {
         return this
     }
 
-    fun setOnLoginListener(onLoginListener: OnLoginListener?): LoginWithHuma {
+    fun setOnLoginListener(
+        onLoginListener: OnLoginListener?,
+        isRegisterListener: Boolean = true,
+    ): LoginWithHuma {
         this.onLoginListener = onLoginListener
-        registerListeners()
+        if (isRegisterListener)
+            registerListeners()
         return this
     }
 
@@ -235,9 +239,11 @@ class LoginWithHuma(private val context: Context) {
     }
 
 
-    interface OnLoginListener {
-        fun onLogin(code: String?)
-        fun onFail(message: String?, status: TemporaryCodeResponse.ResponseStatus?)
+    fun loginForUnity(context: Context, clientKey: String?, loginListener: OnLoginListener) {
+
+        setClientKey(clientKey)
+        setOnLoginListener(loginListener, true)
+        send()
     }
 
     companion object {
