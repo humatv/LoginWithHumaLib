@@ -16,9 +16,9 @@ class LoginWithHumaButton : AppCompatButton,View.OnClickListener {
 
 
     constructor(context: Context?) : super(
-        ContextThemeWrapper(context, R.style.HumaButton),
+        ContextThemeWrapper(context, R.style.DoneButton),
         null,
-        R.style.HumaButton
+        R.style.DoneButton
     ) {
         init(null)
     }
@@ -26,20 +26,20 @@ class LoginWithHumaButton : AppCompatButton,View.OnClickListener {
     constructor(context: Context?, attrs: AttributeSet?) : super(
         ContextThemeWrapper(
             context,
-            R.style.HumaButton
-        ), attrs, R.style.HumaButton
+            R.style.DoneButton
+        ), attrs, R.style.DoneButton
     ) {
         init(attrs)
     }
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        ContextThemeWrapper(context, R.style.HumaButton), attrs, R.style.HumaButton
+        ContextThemeWrapper(context, R.style.DoneButton), attrs, R.style.DoneButton
     ) {
         init(attrs)
     }
 
     private fun init(attrs: AttributeSet?) {
-        typeface = Typeface.createFromAsset(context.assets, "IRANYekanMobileRegular.ttf")
+        typeface = Typeface.createFromAsset(context.assets, "PeydaFaNum-Regular.ttf")
         loginWithHuma = LoginWithHuma(context)
         if (attrs != null) {
             val a = context.obtainStyledAttributes(
