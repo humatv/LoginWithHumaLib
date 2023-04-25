@@ -67,6 +67,7 @@ open class LoginWithDoneButton : AppCompatButton,View.OnClickListener {
 
     override fun setOnClickListener(l: OnClickListener?) {
         myOnClickListener = l
+        super.setOnClickListener(l)
     }
 
     override fun onClick(view: View) {
