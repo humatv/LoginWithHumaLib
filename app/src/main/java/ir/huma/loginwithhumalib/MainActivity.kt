@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import ir.huma.loginwithhuma.LoginWithDone
 import ir.huma.loginwithhuma.LoginWithHuma
 import ir.huma.loginwithhuma.LoginWithHuma.OnLoginListener
 import ir.huma.loginwithhuma.TemporaryCodeResponse
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         button.setOnClickListener {
             findViewById<View>(R.id.progress).visibility = View.VISIBLE
-            LoginWithHuma(
+            LoginWithDone(
                 this@MainActivity
             ).setClientKey("52079f47ba2344de96862d1186be15a5")
                 .setOnLoginListener(object : OnLoginListener {

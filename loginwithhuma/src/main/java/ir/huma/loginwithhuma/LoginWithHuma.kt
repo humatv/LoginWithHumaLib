@@ -17,7 +17,8 @@ import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import kotlinx.coroutines.*
 
-class LoginWithHuma(private val context: Context) {
+@Deprecated("please use LoginWithDone class instead")
+open class LoginWithHuma(private val context: Context) {
     private val TAG = "LoginWithHuma"
     var clientKey: String? = null
         private set

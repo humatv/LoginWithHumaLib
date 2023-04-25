@@ -10,7 +10,7 @@
         android:id="@+id/loginWithButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/HumaButton"
+        style="@style/DoneButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" />
 
