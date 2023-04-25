@@ -10,15 +10,25 @@
         android:id="@+id/loginWithButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/HumaButton"
+        style="@style/DoneButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" />
+
+    <ir.huma.loginwithhuma.LoginWithDoneButton
+        android:id="@+id/loginWithButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        app:clientKey="52079f47ba2344de96862d1186be15a5"
+        android:layout_marginTop="70dp" />
+    
 
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
         android:visibility="gone" />
 
 </RelativeLayout>
