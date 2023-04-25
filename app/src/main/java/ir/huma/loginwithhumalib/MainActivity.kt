@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ir.huma.loginwithhuma.LoginWithDone
 import ir.huma.loginwithhuma.LoginWithHuma
-import ir.huma.loginwithhuma.LoginWithHuma.OnLoginListener
+import ir.huma.loginwithhuma.LoginWithDone.OnLoginListener
 import ir.huma.loginwithhuma.TemporaryCodeResponse
 
 class MainActivity : AppCompatActivity() {
