@@ -2,23 +2,27 @@ package ir.huma.loginwithhumalib
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ir.huma.loginwithhuma.LoginWithDone
-import ir.huma.loginwithhuma.LoginWithHuma
 import ir.huma.loginwithhuma.LoginWithDone.OnLoginListener
 import ir.huma.loginwithhuma.LoginWithDoneButton
 import ir.huma.loginwithhuma.TemporaryCodeResponse
 
 class MainActivity : AppCompatActivity() {
     lateinit var progressBar: ProgressBar
+    lateinit var resultText: TextView
+    private val TAG = "MainActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         progressBar = findViewById<ProgressBar>(R.id.progress)
+        resultText = findViewById<TextView>(R.id.result_text)
 
         val buttonRaw = findViewById<Button>(R.id.loginWithButton)
         val buttonDone = findViewById<LoginWithDoneButton>(R.id.loginWithButton2)
@@ -26,6 +30,20 @@ class MainActivity : AppCompatActivity() {
         rawButtonLogin(buttonRaw)
         doneButtonLogin(buttonDone)
 
+    }
+    private fun onLoginResult(code: String?) {
+        progressBar.visibility = View.GONE
+        resultText.text = "code:$code"
+        Toast.makeText(this@MainActivity, "login!!!$code", Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "onLoginResult: $code")
+
+    }
+    private fun onErrorResult(message: String?, status: TemporaryCodeResponse.ResponseStatus?) {
+        resultText.text = "error:$message // $status"
+        progressBar.visibility = View.GONE
+        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "onErrorResult: message : $message ")
+        Log.d(TAG, "onErrorResult: status:  $status ")
     }
 
     private fun doneButtonLogin(button: LoginWithDoneButton?) {
@@ -36,16 +54,15 @@ class MainActivity : AppCompatActivity() {
             }
             setOnLoginListener(object :OnLoginListener{
                 override fun onLogin(code: String?) {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(this@MainActivity, "login!!!", Toast.LENGTH_SHORT).show()
-                }
+                    onLoginResult(code)
+                    }
 
                 override fun onFail(
                     message: String?,
                     status: TemporaryCodeResponse.ResponseStatus?,
                 ) {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+                    onErrorResult(message,status)
+
                 }
             })
         }
@@ -60,13 +77,15 @@ class MainActivity : AppCompatActivity() {
                 .setOnLoginListener(object : OnLoginListener {
                     override fun onLogin(code: String?) {
                         progressBar.visibility = View.GONE
-                        Toast.makeText(this@MainActivity, "login!!!", Toast.LENGTH_SHORT).show()
+                        resultText.text = "code:$code"
+                        Toast.makeText(this@MainActivity, "login!!!$code", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onFail(
                         message: String?,
                         status: TemporaryCodeResponse.ResponseStatus?
                     ) {
+                        resultText.text = "error:$message // $status"
                         progressBar.visibility = View.GONE
                         Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                     }
