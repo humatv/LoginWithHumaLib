@@ -12,9 +12,11 @@ import android.widget.Toast
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.PropertyAccessor
-import ir.huma.humastore.ILoginWithHumaService
 import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import ir.huma.humastore.ILoginWithHumaService
 import kotlinx.coroutines.*
 
 
@@ -95,7 +97,8 @@ open class LoginWithDone(private val context: Context) {
             launch {
                 try {
                     val result = loginWithHumaService!!.startLogin(clientKey)
-                    val response = convertJsonToObject(result)
+                    val response = Gson().fromJson(result, TemporaryCodeResponse::class.java)
+//                    convertJsonToObject(result)
                     Log.d(TAG, "sendLoginToService: $response")
                     Handler(Looper.getMainLooper()).post {
                         Log.d(TAG, "onServiceConnected: mainThread!!!")
@@ -219,7 +222,7 @@ open class LoginWithDone(private val context: Context) {
         }
     }
 
-    private fun convertJsonToObject(str: String): TemporaryCodeResponse {
+     fun convertJsonToObject(str: String): TemporaryCodeResponse {
         val mapper = ObjectMapper()
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
         mapper.configure(DeserializationFeature.ACCEPT_FLOAT_AS_INT, true)
