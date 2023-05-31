@@ -97,8 +97,9 @@ open class LoginWithDone(private val context: Context) {
             launch {
                 try {
                     val result = loginWithHumaService!!.startLogin(clientKey)
-                    val response = Gson().fromJson(result, TemporaryCodeResponse::class.java)
-//                    convertJsonToObject(result)
+                    val response =convertJsonToObject(result)
+//                        Gson().fromJson(result, TemporaryCodeResponse::class.java)
+
                     Log.d(TAG, "sendLoginToService: $response")
                     Handler(Looper.getMainLooper()).post {
                         Log.d(TAG, "onServiceConnected: mainThread!!!")
@@ -112,7 +113,7 @@ open class LoginWithDone(private val context: Context) {
                 } catch (e: Exception) {
                     onLoginListener?.onFail(
                         e.message,
-                        TemporaryCodeResponse.ResponseStatus.UnknownError
+                        ResponseStatus.UnknownError
                     )
                 }
                 try {
@@ -207,7 +208,7 @@ open class LoginWithDone(private val context: Context) {
                         } else {
                             onLoginListener!!.onFail(
                                 intent.getStringExtra("message"),
-                                TemporaryCodeResponse.ResponseStatus.UnknownError
+                                ResponseStatus.UnknownError
                             )
                         }
                         try {
@@ -241,7 +242,7 @@ open class LoginWithDone(private val context: Context) {
 
     interface OnLoginListener {
         fun onLogin(code: String?)
-        fun onFail(message: String?, status: TemporaryCodeResponse.ResponseStatus?)
+        fun onFail(message: String?, status: ResponseStatus?)
     }
 
     companion object {

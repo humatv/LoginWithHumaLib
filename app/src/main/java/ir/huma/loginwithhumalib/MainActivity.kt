@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import ir.huma.loginwithhuma.LoginWithDone
 import ir.huma.loginwithhuma.LoginWithDone.OnLoginListener
 import ir.huma.loginwithhuma.LoginWithDoneButton
+import ir.huma.loginwithhuma.ResponseStatus
 import ir.huma.loginwithhuma.TemporaryCodeResponse
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onLoginResult: $code")
 
     }
-    private fun onErrorResult(message: String?, status: TemporaryCodeResponse.ResponseStatus?) {
+    private fun onErrorResult(message: String?, status: ResponseStatus?) {
         resultText.text = "error:$message // $status"
         progressBar.visibility = View.GONE
         Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onFail(
                     message: String?,
-                    status: TemporaryCodeResponse.ResponseStatus?,
+                    status: ResponseStatus?,
                 ) {
                     onErrorResult(message,status)
 
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             LoginWithDone(
                 this@MainActivity
-            ).setClientKey("52079f47ba2344de96862d1186be15a5")
+            ).setClientKey("3e90dad8c22d68d56a15c54b35c8ea35")
                 .setOnLoginListener(object : OnLoginListener {
                     override fun onLogin(code: String?) {
                         progressBar.visibility = View.GONE
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onFail(
                         message: String?,
-                        status: TemporaryCodeResponse.ResponseStatus?
+                        status: ResponseStatus?
                     ) {
                         resultText.text = "error:$message // $status"
                         progressBar.visibility = View.GONE

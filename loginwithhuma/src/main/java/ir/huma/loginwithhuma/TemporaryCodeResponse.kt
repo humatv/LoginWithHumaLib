@@ -8,15 +8,4 @@ data class TemporaryCodeResponse(
     val errorMessage: String? = null,
     val temporaryCode: String? = null,
     val status : ResponseStatus
-){
-    @Keep
-    enum class ResponseStatus{
-        Success,
-        InternetError,
-        ServerError,
-        UserCancel,
-        NeedWizard,
-        UnknownPackage,
-        UnknownError
-    }
-}
+)
