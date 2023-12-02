@@ -30,7 +30,7 @@ add this dependency in your build.gradle(app level)
 ```
 dependencies {
 ...
-	        implementation 'com.github.humatv:LoginWithHumaLib:4.0.0'
+	        implementation 'com.github.humatv:LoginWithHumaLib:4.0.1'
 	...
 	}
 ```
@@ -138,7 +138,7 @@ and in your code you can call LoginWithDone when ever you need like below:
 
 - replace "YourClientKey" with proper string (call Done Support for getting it)
 - you can set the clientId both in your code or in XML layout file
--
+- you can pass a Boolean flag 'isNavigateToRegisterWizard' to send for enable or disable navigating unknown users to register wizard screen
 
 .
 
