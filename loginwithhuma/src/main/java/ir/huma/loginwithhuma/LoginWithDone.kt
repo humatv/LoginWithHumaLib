@@ -43,7 +43,11 @@ open class LoginWithDone(private val context: Context) {
         return this
     }
 
-    fun send() {
+    /**
+     * if isNavigateToRegisterWizard == true then if user has not login
+     * we navigate to wizard to register and if it is false we do not navigate to register
+     * */
+    fun send(isNavigateToRegisterWizard:Boolean=true) {
         if (clientKey == null || clientKey == "") {
             throw RuntimeException("please set Client Key in java code!!!")
         }
@@ -64,10 +68,12 @@ open class LoginWithDone(private val context: Context) {
                 sendLoginToStore()
             } catch (e: Exception) {
                 e.printStackTrace()
-                try {
-                    sendLoginToProfile()
-                } catch (e2: Exception) {
-                    e2.printStackTrace()
+                if (isNavigateToRegisterWizard){
+                    try {
+                        sendLoginToProfile()
+                    } catch (e2: Exception) {
+                        e2.printStackTrace()
+                    }
                 }
             }
         } else {
