@@ -1,6 +1,11 @@
 package ir.huma.loginwithhuma
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -12,10 +17,14 @@ import android.widget.Toast
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.PropertyAccessor
-import ir.huma.humastore.ILoginWithHumaService
-import com.fasterxml.jackson.databind.*
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import kotlinx.coroutines.*
+import ir.huma.humastore.ILoginWithHumaService
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 open class LoginWithDone(private val context: Context) {
@@ -26,12 +35,21 @@ open class LoginWithDone(private val context: Context) {
         private set
     var onLoginListener: OnLoginListener? = null
         private set
+    var isNavigateToRegisterWizard: Boolean = true
+        private set
 
     fun setClientKey(clientKey: String?): LoginWithDone {
         this.clientKey = clientKey
         return this
     }
-
+    /**
+     * if isNavigateToRegisterWizard == true then if user has not login
+     * we navigate to wizard to register and if it is false we do not navigate to register
+     * */
+    fun setNavigateToRegister(isNavigateToRegisterWizard:Boolean): LoginWithDone {
+        this.isNavigateToRegisterWizard = isNavigateToRegisterWizard
+        return this
+    }
     fun setOnLoginListener(onLoginListener: OnLoginListener?): LoginWithDone {
         this.onLoginListener = onLoginListener
         registerListeners()
@@ -43,11 +61,8 @@ open class LoginWithDone(private val context: Context) {
         return this
     }
 
-    /**
-     * if isNavigateToRegisterWizard == true then if user has not login
-     * we navigate to wizard to register and if it is false we do not navigate to register
-     * */
-    fun send(isNavigateToRegisterWizard:Boolean=true) {
+
+    fun send() {
         if (clientKey == null || clientKey == "") {
             throw RuntimeException("please set Client Key in java code!!!")
         }
