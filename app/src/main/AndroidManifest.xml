@@ -21,20 +21,6 @@
             </intent-filter>
         </activity>
 
-
-        <activity android:name="ir.huma.loginwithhuma.CallbackActivity">
-            <intent-filter>
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-                <data
-                    android:host="testlogin.huma.ir"
-                    android:scheme="app"
-                    />
-            </intent-filter>
-        </activity>
-
     </application>
 
 </manifest>
