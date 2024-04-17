@@ -14,6 +14,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.PropertyAccessor
@@ -173,7 +174,12 @@ open class LoginWithDone(private val context: Context) {
     }
 
     private fun registerListeners() {
-        context.registerReceiver(receiver, IntentFilter(receive))
+        ContextCompat.registerReceiver(
+            context,
+            receiver,
+            IntentFilter(receive),
+            ContextCompat.RECEIVER_EXPORTED
+        )
     }
 
     fun unregiter() {
