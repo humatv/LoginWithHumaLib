@@ -26,6 +26,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import ir.huma.humastore.ILoginWithHumaService
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.Executors
 
 
 open class LoginWithDone(private val context: Context) {
@@ -148,7 +149,26 @@ open class LoginWithDone(private val context: Context) {
     private fun connectToLoginWithHuma() {
         val usageStatIntent = Intent("ir.huma.humastore.loginWithHuma")
         usageStatIntent.setPackage("ir.huma.humastore")
-        context.bindService(usageStatIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                context.bindService(
+                    usageStatIntent,
+                    Context.BIND_AUTO_CREATE or Context.BIND_ALLOW_ACTIVITY_STARTS,
+                    Executors.newSingleThreadExecutor(),
+                    serviceConnection
+                )
+            } else {
+                context.bindService(
+                    usageStatIntent,
+                    Context.BIND_AUTO_CREATE,
+                    Executors.newSingleThreadExecutor(),
+                    serviceConnection
+                )
+            }
+        } else {
+            context.bindService(usageStatIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
     }
 
     private fun sendLoginToStore() {
