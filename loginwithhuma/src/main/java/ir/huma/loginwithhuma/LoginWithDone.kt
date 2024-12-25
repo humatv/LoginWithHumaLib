@@ -9,9 +9,7 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -24,12 +22,18 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import ir.huma.humastore.ILoginWithHumaService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 
 
-open class LoginWithDone(private val context: Context) {
+open class LoginWithDone(
+    private val context: Context,
+    val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+) {
+
     private val TAG = "LoginWithHuma"
     var clientKey: String? = null
         private set
@@ -44,14 +48,16 @@ open class LoginWithDone(private val context: Context) {
         this.clientKey = clientKey
         return this
     }
+
     /**
      * if isNavigateToRegisterWizard == true then if user has not login
      * we navigate to wizard to register and if it is false we do not navigate to register
      * */
-    fun setNavigateToRegister(isNavigateToRegisterWizard:Boolean): LoginWithDone {
+    fun setNavigateToRegister(isNavigateToRegisterWizard: Boolean): LoginWithDone {
         this.isNavigateToRegisterWizard = isNavigateToRegisterWizard
         return this
     }
+
     fun setOnLoginListener(onLoginListener: OnLoginListener?): LoginWithDone {
         this.onLoginListener = onLoginListener
         registerListeners()
@@ -85,7 +91,7 @@ open class LoginWithDone(private val context: Context) {
                 sendLoginToStore()
             } catch (e: Exception) {
                 e.printStackTrace()
-                if (isNavigateToRegisterWizard){
+                if (isNavigateToRegisterWizard) {
                     try {
                         sendLoginToProfile()
                     } catch (e2: Exception) {
@@ -104,7 +110,10 @@ open class LoginWithDone(private val context: Context) {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             loginWithHumaService = ILoginWithHumaService.Stub.asInterface(service)
             Log.d(TAG, "service connected!!")
-            sendLoginToService()
+
+            coroutineScope.launch(Dispatchers.IO) {
+                sendLoginToService()
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -113,36 +122,30 @@ open class LoginWithDone(private val context: Context) {
         }
     }
 
-    private fun sendLoginToService() {
-        runBlocking {
-            launch {
-                try {
-                    val result = loginWithHumaService!!.startLogin(clientKey)
-                    val response = convertJsonToObject(result)
-                    Log.d(TAG, "sendLoginToService: $response")
-                    Handler(Looper.getMainLooper()).post {
-                        Log.d(TAG, "onServiceConnected: mainThread!!!")
+    private suspend fun sendLoginToService() {
+        try {
+            val result = loginWithHumaService!!.startLogin(clientKey)
+            val response = convertJsonToObject(result)
+            Log.d(TAG, "sendLoginToService: $response")
+            withContext(Dispatchers.Main) {
+                Log.d(TAG, "onServiceConnected: mainThread!!!")
 
-                        if (response.isSuccess) {
-                            onLoginListener?.onLogin(response.temporaryCode)
-                        } else {
-                            onLoginListener?.onFail(response.errorMessage, response.status)
-                        }
-                    }
-                } catch (e: Exception) {
-                    onLoginListener?.onFail(
-                        e.message,
-                        TemporaryCodeResponse.ResponseStatus.UnknownError
-                    )
+                if (response.isSuccess) {
+                    onLoginListener?.onLogin(response.temporaryCode)
+                } else {
+                    onLoginListener?.onFail(response.errorMessage, response.status)
                 }
-                try {
-                    context.unbindService(serviceConnection)
-                    Log.d(TAG, "onServiceConnected: unbind")
-                } catch (e: Exception) {
-
-                }
-
             }
+        } catch (e: Exception) {
+            onLoginListener?.onFail(
+                e.message,
+                TemporaryCodeResponse.ResponseStatus.UnknownError
+            )
+        }
+        try {
+            context.unbindService(serviceConnection)
+            Log.d(TAG, "onServiceConnected: unbind")
+        } catch (_: Exception) {
         }
     }
 
@@ -151,9 +154,14 @@ open class LoginWithDone(private val context: Context) {
         usageStatIntent.setPackage("ir.huma.humastore")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            context.bindService(usageStatIntent, Context.BIND_AUTO_CREATE,Executors.newSingleThreadExecutor(),serviceConnection)
-        }else {
-            context.bindService(usageStatIntent,serviceConnection, Context.BIND_AUTO_CREATE)
+            context.bindService(
+                usageStatIntent,
+                Context.BIND_AUTO_CREATE,
+                Executors.newSingleThreadExecutor(),
+                serviceConnection
+            )
+        } else {
+            context.bindService(usageStatIntent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
 
