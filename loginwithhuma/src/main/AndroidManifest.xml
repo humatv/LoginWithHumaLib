@@ -2,12 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ir.huma.loginwithhuma">
 
+    <uses-permission android:name="tech.done.permission.LOGIN_WITH_DONE" />
 
     <queries>
-        <!-- Explicit apps you know in advance about: -->
-        <package android:name="ir.huma.humastore"/>
+        <package android:name="ir.huma.humastore" />
+        <package android:name="ir.huma.android.launcher" />
     </queries>
-
-
-    <application></application>
 </manifest>
