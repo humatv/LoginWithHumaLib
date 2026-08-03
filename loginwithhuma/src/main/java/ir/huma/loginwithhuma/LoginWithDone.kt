@@ -37,7 +37,7 @@ open class LoginWithDone(
                 .show()
             return
         }
-
+        unregister()
         auth = AuthFactory.create(
             authVersion,
             clientId!!,

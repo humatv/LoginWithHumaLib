@@ -6,7 +6,7 @@ import androidx.core.content.pm.PackageInfoCompat
 
 internal object AuthVersionDetector {
 
-    private const val MIN_DONE_UI_VERSION_CODE = 349
+    private const val MIN_DONE_UI_VERSION_CODE = 400
     private const val MIN_DONE_APPS_VERSION_CODE = 111
     private const val MIN_HUMA_STORE_VERSION_CODE = 45
 
