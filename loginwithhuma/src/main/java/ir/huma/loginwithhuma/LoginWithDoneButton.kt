@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatButton
-import ir.huma.loginwithhuma.LoginWithDone.OnLoginListener
+
 open class LoginWithDoneButton : AppCompatButton,View.OnClickListener {
     var loginWithDone: LoginWithDone? = null
     private var myOnClickListener: OnClickListener? = null
@@ -47,19 +47,19 @@ open class LoginWithDoneButton : AppCompatButton,View.OnClickListener {
             )
             val clientKey = a.getString(R.styleable.LoginWithHumaButton_clientKey)
             if (clientKey != null) {
-                loginWithDone!!.setClientKey(clientKey)
+                loginWithDone!!.setClientId(clientKey)
             }
             a.recycle()
         }
     }
 
-    fun setClientKey(clientKey: String?): LoginWithDoneButton {
-        loginWithDone!!.setClientKey(clientKey)
+    fun setClientKey(clientKey: String): LoginWithDoneButton {
+        loginWithDone!!.setClientId(clientKey)
         return this
     }
 
 
-    fun setOnLoginListener(onLoginListener: OnLoginListener?): LoginWithDoneButton {
+    fun setOnLoginListener(onLoginListener: OnLoginListener): LoginWithDoneButton {
         loginWithDone!!.setOnLoginListener(onLoginListener)
         super.setOnClickListener(this)
         return this
@@ -71,13 +71,13 @@ open class LoginWithDoneButton : AppCompatButton,View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        loginWithDone!!.send()
+        loginWithDone!!.login()
         if (myOnClickListener != null) myOnClickListener!!.onClick(view)
     }
 
     override fun onDetachedFromWindow() {
         try {
-            loginWithDone!!.unregiter()
+            loginWithDone!!.unregister()
         } catch (e: Exception) {
         }
         super.onDetachedFromWindow()
