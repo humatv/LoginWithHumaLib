@@ -30,7 +30,7 @@ add this dependency in your build.gradle(app level)
 ```
 dependencies {
 ...
-	        implementation 'com.github.humatv:LoginWithHumaLib:4.2.0'
+	        implementation 'com.github.humatv:LoginWithHumaLib:4.2.1'
 	...
 	}
 ```
