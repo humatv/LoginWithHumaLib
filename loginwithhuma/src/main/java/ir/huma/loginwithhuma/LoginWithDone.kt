@@ -4,32 +4,62 @@ import android.content.Context
 import android.widget.Toast
 import ir.huma.loginwithhuma.auth.Auth
 import ir.huma.loginwithhuma.auth.AuthFactory
-import ir.huma.loginwithhuma.auth.AuthVersionDetector
 import ir.huma.loginwithhuma.auth.AuthVersion
+import ir.huma.loginwithhuma.auth.AuthVersionDetector
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 open class LoginWithDone(
-    private val context: Context
+    private val context: Context,
+    val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) {
 
-    private var clientId: String? = null
-    private var scope: String = "phone"
-    private var loginListener: OnLoginListener? = null
-    private var isNavigateToRegisterUser: Boolean = true
+    var clientKey: String? = null
+        private set
+    var scope: String? = "phone"
+        private set
+    var onLoginListener: ir.huma.loginwithhuma.OnLoginListener? = null
+        private set
+    var isNavigateToRegisterWizard: Boolean = true
+        private set
 
     private var auth: Auth? = null
 
-    fun setClientId(value: String) = apply { clientId = value }
+    fun setClientId(value: String?): LoginWithDone {
+        clientKey = value
+        return this
+    }
 
-    fun setOnLoginListener(listener: OnLoginListener) = apply { loginListener = listener }
+    fun setOnLoginListener(listener: ir.huma.loginwithhuma.OnLoginListener?): LoginWithDone {
+        onLoginListener = listener
+        return this
+    }
 
-    fun setScope(value: String) = apply { scope = value }
+    fun setScope(value: String?): LoginWithDone {
+        scope = value
+        return this
+    }
 
-    fun setNavigateToRegister(value: Boolean) = apply { isNavigateToRegisterUser = value }
+    /**
+     * if value == true then if user has not login
+     * we navigate to wizard to register and if it is false we do not navigate to register
+     * */
+    fun setNavigateToRegister(value: Boolean): LoginWithDone {
+        isNavigateToRegisterWizard = value
+        return this
+    }
 
     fun login() {
-        require(!clientId.isNullOrEmpty()) { "Client id must be set" }
-        requireNotNull(loginListener) { "OnLoginListener must be set" }
-        require(scope.isNotEmpty()) { "Scope must be set" }
+        val clientId = clientKey
+        val listener = onLoginListener
+        val currentScope = scope
+
+        if (clientId.isNullOrEmpty()) {
+            throw RuntimeException("please set Client Key in java code!!!")
+        }
+        if (listener == null) {
+            throw RuntimeException("please setOnLoginListener in java code!!!")
+        }
 
         val authVersion = AuthVersionDetector.getAuthVersion(context)
         if (authVersion == AuthVersion.NONE) {
@@ -37,14 +67,19 @@ open class LoginWithDone(
                 .show()
             return
         }
+        if (currentScope.isNullOrEmpty()) {
+            throw RuntimeException("Scope is not be Null!!!")
+        }
+
         unregister()
         auth = AuthFactory.create(
             authVersion,
-            clientId!!,
-            loginListener!!,
+            clientId,
+            listener,
             context,
-            isNavigateToRegisterUser,
-            scope
+            isNavigateToRegisterWizard,
+            currentScope,
+            coroutineScope
         )
         auth?.connect()
     }
@@ -52,4 +87,28 @@ open class LoginWithDone(
     fun unregister() {
         auth?.disconnect()
     }
+
+    // ---------------------------------------------------------------------------------------
+    // Backward compatibility with 4.1.1 and earlier. Old code keeps compiling and working.
+    // ---------------------------------------------------------------------------------------
+
+    @Deprecated("Use setClientId", ReplaceWith("setClientId(clientKey)"))
+    fun setClientKey(clientKey: String?): LoginWithDone = setClientId(clientKey)
+
+    @Deprecated("Use login()", ReplaceWith("login()"))
+    fun send() = login()
+
+    @Deprecated("Use unregister()", ReplaceWith("unregister()"))
+    fun unregiter() = unregister()
+
+    /**
+     * Kept only so that code written against 4.1.1
+     * (`import ir.huma.loginwithhuma.LoginWithDone.OnLoginListener`) still compiles.
+     * New code should use [ir.huma.loginwithhuma.OnLoginListener].
+     */
+    @Deprecated(
+        "Use ir.huma.loginwithhuma.OnLoginListener",
+        ReplaceWith("ir.huma.loginwithhuma.OnLoginListener")
+    )
+    interface OnLoginListener : ir.huma.loginwithhuma.OnLoginListener
 }
