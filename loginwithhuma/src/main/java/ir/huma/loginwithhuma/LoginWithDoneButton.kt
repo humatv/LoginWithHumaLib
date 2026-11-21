@@ -53,13 +53,13 @@ open class LoginWithDoneButton : AppCompatButton,View.OnClickListener {
         }
     }
 
-    fun setClientKey(clientKey: String): LoginWithDoneButton {
+    fun setClientKey(clientKey: String?): LoginWithDoneButton {
         loginWithDone!!.setClientId(clientKey)
         return this
     }
 
 
-    fun setOnLoginListener(onLoginListener: OnLoginListener): LoginWithDoneButton {
+    fun setOnLoginListener(onLoginListener: OnLoginListener?): LoginWithDoneButton {
         loginWithDone!!.setOnLoginListener(onLoginListener)
         super.setOnClickListener(this)
         return this
