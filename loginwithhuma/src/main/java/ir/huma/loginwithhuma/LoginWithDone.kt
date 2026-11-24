@@ -9,10 +9,17 @@ import ir.huma.loginwithhuma.auth.AuthVersionDetector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-open class LoginWithDone(
-    private val context: Context,
-    val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-) {
+open class LoginWithDone(private val context: Context) {
+
+    @Deprecated(
+        "The coroutine scope is managed internally. Will be removed in the next major version.",
+        ReplaceWith("LoginWithDone(context)")
+    )
+    constructor(context: Context, coroutineScope: CoroutineScope) : this(context) {
+        authScope = coroutineScope
+    }
+
+    private var authScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     private var clientId: String? = null
     private var loginScope: String? = "phone"
@@ -58,7 +65,7 @@ open class LoginWithDone(
             context,
             navigateToRegister,
             currentScope,
-            coroutineScope
+            authScope
         )
         auth?.connect()
     }
@@ -83,6 +90,9 @@ open class LoginWithDone(
 
     @Deprecated("Will be removed in the next major version")
     val isNavigateToRegisterWizard: Boolean get() = navigateToRegister
+
+    @Deprecated("Will be removed in the next major version")
+    val coroutineScope: CoroutineScope get() = authScope
 
     @Deprecated("Use setClientId", ReplaceWith("setClientId(clientKey)"))
     fun setClientKey(clientKey: String?): LoginWithDone = setClientId(clientKey)
