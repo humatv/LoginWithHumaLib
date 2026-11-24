@@ -51,8 +51,8 @@ internal class AuthV3(
 
     private val loginCallback = object : ILoginCallback.Stub() {
 
-        // AIDL callbacks arrive on a binder thread. Deliver them on the main thread
-        // so that listeners written for older versions can safely touch the UI.
+        // AIDL callbacks run on a binder thread. OnLoginListener has always been invoked on the
+        // main thread (AuthV1/AuthV2 and 4.1.1), and clients update UI in it, so keep that contract.
         override fun onSuccess(code: String?) {
             mainHandler.post { loginListener.onLogin(code) }
         }

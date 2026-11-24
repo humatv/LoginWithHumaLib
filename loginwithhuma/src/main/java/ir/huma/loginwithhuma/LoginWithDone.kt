@@ -14,52 +14,31 @@ open class LoginWithDone(
     val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) {
 
-    var clientKey: String? = null
-        private set
-    var scope: String? = "phone"
-        private set
-    var onLoginListener: ir.huma.loginwithhuma.OnLoginListener? = null
-        private set
-    var isNavigateToRegisterWizard: Boolean = true
-        private set
+    private var clientId: String? = null
+    private var loginScope: String? = "phone"
+    private var loginListener: ir.huma.loginwithhuma.OnLoginListener? = null
+    private var navigateToRegister: Boolean = true
 
     private var auth: Auth? = null
 
-    fun setClientId(value: String?): LoginWithDone {
-        clientKey = value
-        return this
-    }
+    fun setClientId(value: String?): LoginWithDone = apply { clientId = value }
 
-    fun setOnLoginListener(listener: ir.huma.loginwithhuma.OnLoginListener?): LoginWithDone {
-        onLoginListener = listener
-        return this
-    }
+    fun setOnLoginListener(listener: ir.huma.loginwithhuma.OnLoginListener?): LoginWithDone =
+        apply { loginListener = listener }
 
-    fun setScope(value: String?): LoginWithDone {
-        scope = value
-        return this
-    }
+    fun setScope(value: String?): LoginWithDone = apply { loginScope = value }
 
     /**
      * if value == true then if user has not login
      * we navigate to wizard to register and if it is false we do not navigate to register
      * */
-    fun setNavigateToRegister(value: Boolean): LoginWithDone {
-        isNavigateToRegisterWizard = value
-        return this
-    }
+    fun setNavigateToRegister(value: Boolean): LoginWithDone =
+        apply { navigateToRegister = value }
 
     fun login() {
-        val clientId = clientKey
-        val listener = onLoginListener
-        val currentScope = scope
-
-        if (clientId.isNullOrEmpty()) {
-            throw RuntimeException("please set Client Key in java code!!!")
-        }
-        if (listener == null) {
-            throw RuntimeException("please setOnLoginListener in java code!!!")
-        }
+        val id = clientId
+        require(!id.isNullOrEmpty()) { "Client id must be set" }
+        val listener = requireNotNull(loginListener) { "OnLoginListener must be set" }
 
         val authVersion = AuthVersionDetector.getAuthVersion(context)
         if (authVersion == AuthVersion.NONE) {
@@ -67,17 +46,17 @@ open class LoginWithDone(
                 .show()
             return
         }
-        if (currentScope.isNullOrEmpty()) {
-            throw RuntimeException("Scope is not be Null!!!")
-        }
+
+        val currentScope = loginScope
+        require(!currentScope.isNullOrEmpty()) { "Scope must be set" }
 
         unregister()
         auth = AuthFactory.create(
             authVersion,
-            clientId,
+            id,
             listener,
             context,
-            isNavigateToRegisterWizard,
+            navigateToRegister,
             currentScope,
             coroutineScope
         )
@@ -90,7 +69,20 @@ open class LoginWithDone(
 
     // ---------------------------------------------------------------------------------------
     // Backward compatibility with 4.1.1 and earlier. Old code keeps compiling and working.
+    // To be removed in the next major version.
     // ---------------------------------------------------------------------------------------
+
+    @Deprecated("Will be removed in the next major version")
+    val clientKey: String? get() = clientId
+
+    @Deprecated("Will be removed in the next major version")
+    val scope: String? get() = loginScope
+
+    @Deprecated("Will be removed in the next major version")
+    val onLoginListener: ir.huma.loginwithhuma.OnLoginListener? get() = loginListener
+
+    @Deprecated("Will be removed in the next major version")
+    val isNavigateToRegisterWizard: Boolean get() = navigateToRegister
 
     @Deprecated("Use setClientId", ReplaceWith("setClientId(clientKey)"))
     fun setClientKey(clientKey: String?): LoginWithDone = setClientId(clientKey)
