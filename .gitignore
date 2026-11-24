@@ -7,6 +7,15 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deploymentTargetDropDown.xml
+/.idea/AndroidProjectSystem.xml
+/.idea/migrations.xml
+/.idea/runConfigurations.xml
+/.idea/other.xml
+/.idea/studiobot.xml
+.cxx
+.kotlin
 .DS_Store
 /build
 /captures
