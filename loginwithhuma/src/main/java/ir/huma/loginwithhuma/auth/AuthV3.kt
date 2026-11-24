@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.RemoteException
 import android.util.Log
 import androidx.core.content.ContextCompat
@@ -23,6 +25,7 @@ internal class AuthV3(
 
     private var loginWithDoneService: ILoginWithDoneService? = null
     private var isConnected = false
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     private val connection = object : ServiceConnection {
 
@@ -48,12 +51,14 @@ internal class AuthV3(
 
     private val loginCallback = object : ILoginCallback.Stub() {
 
+        // AIDL callbacks run on a binder thread. OnLoginListener has always been invoked on the
+        // main thread (AuthV1/AuthV2 and 4.1.1), and clients update UI in it, so keep that contract.
         override fun onSuccess(code: String?) {
-            loginListener.onLogin(code)
+            mainHandler.post { loginListener.onLogin(code) }
         }
 
         override fun onFailure(message: String?) {
-            loginListener.onFail(message, null)
+            mainHandler.post { loginListener.onFail(message, null) }
         }
     }
 
@@ -72,9 +77,10 @@ internal class AuthV3(
 
     override fun disconnect() {
         if (isConnected) {
-            loginWithDoneService?.unregister(loginCallback)
+            runCatching { loginWithDoneService?.unregister(loginCallback) }
             loginWithDoneService = null
-            context.unbindService(connection)
+            isConnected = false
+            runCatching { context.unbindService(connection) }
         }
     }
 }

@@ -30,7 +30,7 @@ add this dependency in your build.gradle(app level)
 ```
 dependencies {
 ...
-	        implementation 'com.github.humatv:LoginWithHumaLib:4.2.0'
+	        implementation 'com.github.humatv:LoginWithHumaLib:4.2.1'
 	...
 	}
 ```
@@ -117,7 +117,7 @@ and in your code you can call LoginWithDone when ever you need like below:
             
             LoginWithDone(
                 context
-            ).setClientKey("YourClientKey")
+            ).setClientId("YourClientKey")
                 .setOnLoginListener(object : OnLoginListener {
                     override fun onLogin(code: String?) {
                         // user successfully share the information with your application 
@@ -131,14 +131,27 @@ and in your code you can call LoginWithDone when ever you need like below:
                     ) {
                        // login has been failed by an issue
                     }
-                }).send()
+                }).login()
         }
 
 ```
 
 - replace "YourClientKey" with proper string (call Done Support for getting it)
 - you can set the clientId both in your code or in XML layout file
-- you can pass a Boolean flag 'setNavigateToRegisterWizard'  for enable or disable navigating unknown users to register wizard screen
+- you can pass a Boolean flag with 'setNavigateToRegister(true/false)' for enable or disable navigating unknown users to register wizard screen
+- call `unregister()` when you are done (for example in `onDestroy`) to release the connection
+- the listener callbacks are always delivered on the main thread
+
+Upgrading from 4.1.1 or older
+-----------
+You only need to change the version number. The old API still works and is marked as deprecated:
+
+| Old API | New API |
+|---|---|
+| `setClientKey(...)` | `setClientId(...)` |
+| `send()` | `login()` |
+| `unregiter()` | `unregister()` |
+| `LoginWithDone.OnLoginListener` | `ir.huma.loginwithhuma.OnLoginListener` |
 
 .
 

@@ -2,6 +2,8 @@ package ir.huma.loginwithhuma.auth
 
 import android.content.Context
 import ir.huma.loginwithhuma.OnLoginListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 internal object AuthFactory {
 
@@ -11,10 +13,11 @@ internal object AuthFactory {
         loginListener: OnLoginListener,
         context: Context,
         isNavigateToRegister: Boolean = true,
-        scope: String = "phone"
+        scope: String = "phone",
+        coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     ): Auth = when (version) {
         AuthVersion.V3 -> AuthV3(clientId, loginListener, context)
-        AuthVersion.V2 -> AuthV2(clientId, loginListener, context)
+        AuthVersion.V2 -> AuthV2(clientId, loginListener, context, coroutineScope)
         AuthVersion.V1 -> AuthV1(clientId, loginListener, isNavigateToRegister, scope, context)
         AuthVersion.NONE -> throw IllegalStateException("Auth version is Unknown")
     }
